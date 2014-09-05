@@ -49,6 +49,7 @@ class Configuration implements ConfigurationInterface
                         scalarNode("username")->defaultValue("")->end()->
                         scalarNode("password")->defaultValue("")->end()->
                         scalarNode("source")->defaultValue("")->end()->
+                        scalarNode("proxy")->defaultValue("")->end()->
 
                         arrayNode("c2dm")->
                             canBeUnset()->
@@ -56,6 +57,7 @@ class Configuration implements ConfigurationInterface
                                 scalarNode("username")->isRequired()->end()->
                                 scalarNode("password")->isRequired()->end()->
                                 scalarNode("source")->defaultValue("")->end()->
+                                scalarNode("proxy")->defaultValue("")->end()->
                             end()->
                         end()->
                         arrayNode("gcm")->
@@ -63,6 +65,7 @@ class Configuration implements ConfigurationInterface
                             children()->
                                 scalarNode("api_key")->isRequired()->cannotBeEmpty()->end()->
                                 booleanNode("use_multi_curl")->defaultValue(true)->end()->
+                                scalarNode("proxy")->defaultValue("")->end()->
                             end()->
                         end()->
                     end()->
@@ -99,6 +102,7 @@ class Configuration implements ConfigurationInterface
                         booleanNode("sandbox")->defaultFalse()->end()->
                         scalarNode("pem")->isRequired()->cannotBeEmpty()->end()->
                         scalarNode("passphrase")->defaultValue("")->end()->
+                        scalarNode("proxy")->defaultValue("")->end()->
                         scalarNode('json_unescaped_unicode')->defaultFalse();
                         if (method_exists($config,'info')) {
                             $config = $config->info('PHP >= 5.4.0 and each messaged must be UTF-8 encoding');

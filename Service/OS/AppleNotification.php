@@ -71,11 +71,12 @@ class AppleNotification implements OSNotificationServiceInterface
      * @param $pem
      * @param $passphrase
      */
-    public function __construct($sandbox, $pem, $passphrase = "", $jsonUnescapedUnicode = FALSE)
+    public function __construct($sandbox, $pem, $passphrase = "", $proxy = "", $jsonUnescapedUnicode = FALSE)
     {
         $this->useSandbox = $sandbox;
         $this->pem = $pem;
         $this->passphrase = $passphrase;
+        $this->proxy = $proxy;
         $this->apnStreams = array();
         $this->messages = array();
         $this->lastMessageId = -1;
@@ -193,6 +194,9 @@ class AppleNotification implements OSNotificationServiceInterface
         if (!isset($this->apnStreams[$apnURL])) {
             // No stream found, setup a new stream
             $ctx = $this->getStreamContext();
+
+			if($this->proxy)
+				stream_context_set_default
             $this->apnStreams[$apnURL] = stream_socket_client($apnURL, $err, $errstr, 60, STREAM_CLIENT_CONNECT, $ctx);
             if (!$this->apnStreams[$apnURL]) {
                 throw new \RuntimeException("Couldn't connect to APN server. Error no $err: $errstr");
@@ -231,7 +235,12 @@ class AppleNotification implements OSNotificationServiceInterface
      */
     protected function getStreamContext()
     {
-        $ctx = stream_context_create();
+    	$opts = array();
+    	if($this->proxy)
+    		$opts['http'] = array(
+    			'proxy' => $this->proxy;
+    		);
+        $ctx = stream_context_create($opts);
 
         stream_context_set_option($ctx, "ssl", "local_cert", $this->pem);
         if (strlen($this->passphrase)) {

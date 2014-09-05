@@ -45,11 +45,12 @@ class AndroidNotification implements OSNotificationServiceInterface
      * @param $password
      * @param $source
      */
-    public function __construct($username, $password, $source)
+    public function __construct($username, $password, $source, $proxy)
     {
         $this->username = $username;
         $this->password = $password;
         $this->source = $source;
+        $this->proxy = $proxy;
         $this->authToken = "";
     }
 
@@ -72,6 +73,8 @@ class AndroidNotification implements OSNotificationServiceInterface
             $data = $message->getMessageBody();
 
             $buzz = new Browser();
+        	if($this->proxy)
+        		$this->browser->getClient()->setProxy($proxy);
             $buzz->getClient()->setVerifyPeer(false);
             $response = $buzz->post("https://android.apis.google.com/c2dm/send", $headers, http_build_query($data));
 

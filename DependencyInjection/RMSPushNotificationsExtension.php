@@ -84,20 +84,24 @@ class RMSPushNotificationsExtension extends Extension
         $username = $config["android"]["username"];
         $password = $config["android"]["password"];
         $source = $config["android"]["source"];
+        $proxy = $config["android"]["proxy"];
         if (isset($config["android"]["c2dm"])) {
             $username = $config["android"]["c2dm"]["username"];
             $password = $config["android"]["c2dm"]["password"];
             $source = $config["android"]["c2dm"]["source"];
+            $source = $config["android"]["c2dm"]["proxy"];
         }
         $this->container->setParameter("rms_push_notifications.android.c2dm.username", $username);
         $this->container->setParameter("rms_push_notifications.android.c2dm.password", $password);
         $this->container->setParameter("rms_push_notifications.android.c2dm.source", $source);
+        $this->container->setParameter("rms_push_notifications.android.c2dm.proxy", $proxy);
 
         // GCM
         $this->container->setParameter("rms_push_notifications.android.gcm.enabled", isset($config["android"]["gcm"]));
         if (isset($config["android"]["gcm"])) {
             $this->container->setParameter("rms_push_notifications.android.gcm.api_key", $config["android"]["gcm"]["api_key"]);
             $this->container->setParameter("rms_push_notifications.android.gcm.use_multi_curl", $config["android"]["gcm"]["use_multi_curl"]);
+            $this->container->setParameter("rms_push_notifications.android.gcm.proxy", $config["android"]["gcm"]["proxy"]);
         }
     }
 
@@ -163,6 +167,7 @@ class RMSPushNotificationsExtension extends Extension
         $this->container->setParameter(sprintf('rms_push_notifications.%s.sandbox', $os), $config[$os]["sandbox"]);
         $this->container->setParameter(sprintf('rms_push_notifications.%s.pem', $os), $pemFile);
         $this->container->setParameter(sprintf('rms_push_notifications.%s.passphrase', $os), $config[$os]["passphrase"]);
+        $this->container->setParameter(sprintf('rms_push_notifications.%s.proxy', $os), $config[$os]["proxy"]);
         $this->container->setParameter(sprintf('rms_push_notifications.%s.json_unescaped_unicode', $os), (bool) $config[$os]['json_unescaped_unicode']);
     }
 

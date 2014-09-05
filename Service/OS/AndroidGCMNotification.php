@@ -54,13 +54,15 @@ class AndroidGCMNotification implements OSNotificationServiceInterface
      * @param bool         $useMultiCurl
      * @param AbstractCurl $client       (optional)
      */
-    public function __construct($apiKey, $useMultiCurl, AbstractCurl $client = null)
+    public function __construct($apiKey, $useMultiCurl, $proxy, AbstractCurl $client = null)
     {
         $this->apiKey = $apiKey;
         if (!$client) {
             $client = ($useMultiCurl ? new MultiCurl() : new Curl());
         }
         $this->browser = new Browser($client);
+        if($proxy)
+        	$this->browser->getClient()->setProxy($proxy);
         $this->browser->getClient()->setVerifyPeer(false);
     }
 
