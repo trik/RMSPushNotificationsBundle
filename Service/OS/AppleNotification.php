@@ -195,8 +195,6 @@ class AppleNotification implements OSNotificationServiceInterface
             // No stream found, setup a new stream
             $ctx = $this->getStreamContext();
 
-			if($this->proxy)
-				stream_context_set_default
             $this->apnStreams[$apnURL] = stream_socket_client($apnURL, $err, $errstr, 60, STREAM_CLIENT_CONNECT, $ctx);
             if (!$this->apnStreams[$apnURL]) {
                 throw new \RuntimeException("Couldn't connect to APN server. Error no $err: $errstr");
@@ -235,14 +233,11 @@ class AppleNotification implements OSNotificationServiceInterface
      */
     protected function getStreamContext()
     {
-    	$opts = array();
-    	if($this->proxy)
-    		$opts['http'] = array(
-    			'proxy' => $this->proxy;
-    		);
-        $ctx = stream_context_create($opts);
+    	$ctx = stream_context_create();
 
         stream_context_set_option($ctx, "ssl", "local_cert", $this->pem);
+        if($this->proxy)
+            stream_context_set_option($ctx, 'http', 'proxy', $this->proxy);
         if (strlen($this->passphrase)) {
             stream_context_set_option($ctx, "ssl", "passphrase", $this->passphrase);
         }
